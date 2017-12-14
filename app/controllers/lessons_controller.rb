@@ -1,8 +1,16 @@
 class LessonsController < ApplicationController
+  before_action :authenticate_user!
+
   def show
+  current_course = current_lesson.section.course
+  enrollment = Enrollment.find_by(course: current_course, user: current_user)
+    if enrollment.nil?
+      redirect_to course_path(current_course), alert: 'You Need To Be Enrolled In The Course To See This Lesson!'
+    end
   end
 
   private
+
 
   helper_method :current_lesson
   def current_lesson
